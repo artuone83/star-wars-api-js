@@ -4,15 +4,23 @@ import styled from 'styled-components';
 
 const SearchBarForm = styled.form``;
 
+const SearchInput = styled.input`
+  padding: 10px;
+`;
+
+const SubmitButton = styled.button`
+  padding: 10px;
+`;
+
 const SearchBar = ({ handleSearch, handleInputChange, inputValue }) => (
   <SearchBarForm onSubmit={handleSearch}>
-    <input
+    <SearchInput
       type="text"
       placeholder="type name"
       value={inputValue}
       onChange={handleInputChange}
     />
-    <button type="submit">Search</button>
+    <SubmitButton type="submit">Search</SubmitButton>
   </SearchBarForm>
 );
 

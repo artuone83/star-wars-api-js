@@ -7,30 +7,62 @@
 import React, { useEffect, useReducer } from 'react';
 import styled from 'styled-components';
 import SearchBar from './components/search-bar';
+import Films from './components/films';
+import { types } from './consts/types';
+import { URL } from './consts/urls';
+import { getFilmsData } from './utils/get-films-data';
+import { appReducer } from './reducer/app-reducer';
+import logo from './Star_Wars_Logo.svg';
+import Container from './layout/container';
 
 const Header = styled.header`
-  background: gray;
+  display: flex;
+  align-items: center;
+  padding: ${({ theme: { padding } }) => `${padding[1]}px`} 0;
+  border-bottom: 1px solid ${({ theme: { color_pallet: { soratoga } } }) => soratoga}
 `;
 
-const Main = styled.main``;
+const H1 = styled.h1`
+  margin-left: 15px;
+`;
+
+const H2 = styled.h2`
+  margin-bottom: 25px;
+`;
+
+const Logo = styled.img`
+  height: 100px;
+`;
+
+const Main = styled.main`
+  padding: ${({ theme: { padding } }) => `${padding[1]}px`} 0;
+`;
+
+const Person = styled.p`
+  display: inline-block;
+  margin-top: 25px;
+  transition: 0.5s;
+  padding: 15px 50px;
+  border-radius: 4px;
+  font-size: 2rem;
+  font-weight: bold;
+  &:hover {
+    cursor: pointer;
+    background: ${({ theme: { color_pallet: { ripeLemon } } }) => ripeLemon};
+    color: ${({ theme: { color_pallet: { black } } }) => black}
+  }
+`;
+const Planet = styled(Person)``;
 
 const Footer = styled.footer``;
 
-const URL = {
-  people: 'https://swapi.dev/api/people/',
-  planets: 'https://swapi.dev/api/planets/',
-};
+const Link = styled.a`
+  color: ${({ theme: { color_pallet: { ripeLemon } } }) => ripeLemon};
 
-const types = {
-  SET_PEOPLE: 'SET_PEOPLE',
-  SET_PLANETS: 'SET_PLANETS',
-  SET_NAME: 'SET_NAME',
-  SET_FILTERED_PEOPLE: 'SET_FILTERED_PEOPLE',
-  SET_FILTERED_PLANETS: 'SET_FILTERED_PLANETS',
-  SET_NO_RESULTS: 'SET_NO_RESULTS',
-  SET_FILMS: 'SET_FILMS',
-  SET_ALL_FILMS: 'SET_ALL_FILMS',
-};
+  &:visited {
+    color: ${({ theme: { color_pallet: { olivetone } } }) => olivetone};
+  }
+`;
 
 const initialState = {
   people: [],
@@ -40,57 +72,6 @@ const initialState = {
   inputValue: '',
   noResults: false,
   films: [],
-};
-
-const appReducer = (state, action) => {
-  switch (action.type) {
-    case types.SET_PEOPLE:
-      return { ...state, people: action.people };
-    case types.SET_NAME:
-      return { ...state, inputValue: action.inputValue };
-    case types.SET_PLANETS:
-      return { ...state, planets: action.planets };
-    case types.SET_FILTERED_PEOPLE:
-      return { ...state, filteredPeople: action.filteredPeople };
-    case types.SET_FILTERED_PLANETS:
-      return { ...state, filteredPlanets: action.filteredPlanets };
-    case types.SET_NO_RESULTS:
-      return { ...state, noResults: action.noResults };
-    case types.SET_FILMS:
-      return { ...state, films: action.films };
-    case types.SET_ALL_FILMS:
-      return { ...state, allFilms: action.allFilms };
-    default:
-      return state;
-  }
-};
-
-const Films = ({ films }) => (
-  <ul>
-    {films.map((film) => (
-      <li key={film.title}>
-        <p>{film.title}</p>
-        <p>{film.release_date}</p>
-        <p>{`${film.opening_crawl.substring(0, 133)}...`}</p>
-      </li>
-    ))}
-  </ul>
-);
-
-const getFilmsData = async (films, dispatch) => {
-  const response = [];
-
-  films.forEach(async (personFilm, index) => {
-    const personFilmHTTPS = personFilm.replace('http', 'https');
-    try {
-      const responseData = await fetch(personFilmHTTPS);
-      const personFilmData = await responseData.json();
-      response[index] = personFilmData;
-      dispatch({ type: types.SET_FILMS, films: response });
-    } catch (error) {
-      console.error(error);
-    }
-  });
 };
 
 const App = () => {
@@ -173,26 +154,29 @@ const App = () => {
   const filteredContent = () => {
     if (state.filteredPeople.length > 0) {
       return state.filteredPeople.map((person) => (
-        <p key={person.name} onClick={handleResultClick(person.name)}>
+        <Person key={person.name} onClick={handleResultClick(person.name)}>
           {person.name}
-        </p>
+        </Person>
       ));
     }
 
     if (state.filteredPlanets.length > 0) {
       return state.filteredPlanets.map((planet) => (
-        <p key={planet.name} onClick={handleResultClick(planet.name)}>
+        <Planet key={planet.name} onClick={handleResultClick(planet.name)}>
           {planet.name}
-        </p>
+        </Planet>
       ));
     }
   };
 
   return (
-    <>
-      <Header>Star wars API</Header>
+    <Container>
+      <Header>
+        <Logo src={logo} alt="logo" />
+        <H1>API</H1>
+      </Header>
       <Main>
-        Main content
+        <H2>Type name, planet or planet population</H2>
         <SearchBar
           handleSearch={handleSearch()}
           handleInputChange={handleInputChange}
@@ -201,8 +185,12 @@ const App = () => {
         {filteredContent()}
         <Films films={state.films} />
       </Main>
-      <Footer>Footer</Footer>
-    </>
+      <Footer>
+        <p>{new Date().getFullYear()}</p>
+        <p>Powered by</p>
+        <Link href="https://swapi.dev/">SWAPI</Link>
+      </Footer>
+    </Container>
   );
 };
 

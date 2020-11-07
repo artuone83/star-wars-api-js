@@ -1,9 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { createGlobalStyle } from 'styled-components';
+import { createGlobalStyle, ThemeProvider } from 'styled-components';
 
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { theme } from './consts/theme';
 
 const GlobalStyle = createGlobalStyle`
   * {
@@ -12,15 +13,35 @@ const GlobalStyle = createGlobalStyle`
     padding: 0;
   }
 
+  html {
+    font-size: 16px;
+  }
+
   body {
-    background: lightgray;
+    background: ${(props) => props.theme.color_pallet.black};
+    color: white;
+  }
+
+  ul {
+    margin: 0;
+    padding: 0;
+  }
+
+  li {
+    list-style-type: none;
+  }
+
+  p {
+    font-size: 1rem;
   }
 `;
 
 ReactDOM.render(
   <React.StrictMode>
-    <GlobalStyle />
-    <App />
+    <ThemeProvider theme={theme}>
+      <GlobalStyle />
+      <App />
+    </ThemeProvider>
   </React.StrictMode>,
   document.getElementById('root'),
 );
