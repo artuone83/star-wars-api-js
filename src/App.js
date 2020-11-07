@@ -17,6 +17,7 @@ import Container from './layout/container';
 
 const Header = styled.header`
   display: flex;
+  justify-content: space-between;
   align-items: center;
   padding: ${({ theme: { padding } }) => `${padding[1]}px`} 0;
   border-bottom: 1px solid ${({ theme: { color_pallet: { soratoga } } }) => soratoga}
@@ -24,10 +25,6 @@ const Header = styled.header`
 
 const H1 = styled.h1`
   margin-left: 15px;
-`;
-
-const H2 = styled.h2`
-  margin-bottom: 25px;
 `;
 
 const Logo = styled.img`
@@ -46,6 +43,7 @@ const Person = styled.p`
   border-radius: 4px;
   font-size: 2rem;
   font-weight: bold;
+  text-transform: uppercase;
   &:hover {
     cursor: pointer;
     background: ${({ theme: { color_pallet: { ripeLemon } } }) => ripeLemon};
@@ -55,7 +53,10 @@ const Person = styled.p`
 `;
 const Planet = styled(Person)``;
 
-const Footer = styled.footer``;
+const Footer = styled.footer`
+  border-top: 1px solid ${({ theme: { color_pallet: { soratoga } } }) => soratoga};
+  padding: ${({ theme: { padding } }) => `${padding[1]}px`} 0;
+`;
 
 const Link = styled.a`
   color: ${({ theme: { color_pallet: { ripeLemon } } }) => ripeLemon};
@@ -117,7 +118,8 @@ const App = () => {
   };
 
   const handleInputChange = (e) => {
-    if (e.target.value === '') {
+    const { value } = e.target;
+    if (value === '') {
       dispatch({
         type: types.SET_FILTERED_PEOPLE,
         filteredPeople: initialState.filteredPeople,
@@ -129,7 +131,7 @@ const App = () => {
       dispatch({ type: types.SET_NO_RESULTS, noResults: false });
       dispatch({ type: types.SET_FILMS, films: initialState.films });
     }
-    dispatch({ type: types.SET_NAME, inputValue: e.target.value });
+    dispatch({ type: types.SET_NAME, inputValue: value.trim() });
   };
 
   const handleResultClick = (name) => async () => {
@@ -174,10 +176,9 @@ const App = () => {
     <Container>
       <Header>
         <Logo src={logo} alt="logo" />
-        <H1>API</H1>
+        <H1>Welcome to Star Wars WIKI</H1>
       </Header>
       <Main>
-        <H2>Type name, planet or planet population</H2>
         <SearchBar
           handleSearch={handleSearch()}
           handleInputChange={handleInputChange}
@@ -188,8 +189,11 @@ const App = () => {
       </Main>
       <Footer>
         <p>{new Date().getFullYear()}</p>
-        <p>Powered by</p>
-        <Link href="https://swapi.dev/">SWAPI</Link>
+        <p>
+          Powered by
+          {' '}
+          <Link href="https://swapi.dev/">SWAPI</Link>
+        </p>
       </Footer>
     </Container>
   );

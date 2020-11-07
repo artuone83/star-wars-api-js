@@ -15,6 +15,9 @@ const GlobalStyle = createGlobalStyle`
 
   html {
     font-size: 16px;
+    font-family: 'Big Shoulders Stencil Text', cursive;
+    /*font-family: 'Space Grotesk', sans-serif;*/
+    /*font-family: 'Teko', sans-serif;*/
   }
 
   body {
@@ -34,6 +37,28 @@ const GlobalStyle = createGlobalStyle`
   p {
     font-size: 1rem;
   }
+
+  ::placeholder {
+  color: white;
+  opacity: 1;
+  font-size: 1rem;
+  font-weight: bold;
+  font-family: 'Big Shoulders Stencil Text', cursive;
+}
+
+:-ms-input-placeholder {
+  color: white;
+  font-size: 1rem;
+  font-weight: bold;
+  font-family: 'Big Shoulders Stencil Text', cursive;
+}
+
+::-ms-input-placeholder {
+  color: white;
+  font-size: 1rem;
+  font-weight: bold;
+  font-family: 'Big Shoulders Stencil Text', cursive;
+}
 `;
 
 ReactDOM.render(
