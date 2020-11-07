@@ -42,14 +42,15 @@ const Person = styled.p`
   display: inline-block;
   margin-top: 25px;
   transition: 0.5s;
-  padding: 15px 50px;
+  padding: 15px 50px 15px 0;
   border-radius: 4px;
   font-size: 2rem;
   font-weight: bold;
   &:hover {
     cursor: pointer;
     background: ${({ theme: { color_pallet: { ripeLemon } } }) => ripeLemon};
-    color: ${({ theme: { color_pallet: { black } } }) => black}
+    color: ${({ theme: { color_pallet: { black } } }) => black};
+    padding-left: 50px;
   }
 `;
 const Planet = styled(Person)``;
