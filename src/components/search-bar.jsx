@@ -46,7 +46,7 @@ const SearchBar = ({ handleSearch, handleInputChange, inputValue }) => (
   <SearchBarForm onSubmit={handleSearch}>
     <SearchInput
       type="text"
-      placeholder="Name, Planet, Population"
+      placeholder="Name, Planet"
       value={inputValue}
       onChange={handleInputChange}
     />

@@ -1,6 +1,35 @@
-# Getting Started with Create React App
+# Star Wars API
+
+[![Netlify Status](https://api.netlify.com/api/v1/badges/efb31c0e-cf52-4648-9012-4eaed6dda7d9/deploy-status)](https://app.netlify.com/sites/star-wars-api-js/deploys)
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+
+This project is live [here](https://star-wars-api-js.netlify.app)
+
+> This application allows to search Star Wars character by name or planet.
+> After getting results user can click on character to get information about selected character movies.
+
+## Setup
+
+To run application locally on developer's machine following steps must be performed.
+
+- clone repository
+- npm install or yarn install
+- npm start or yarn start
+
+## Technologies
+
+- ReactJS
+- Styled-components (SASS)
+
+## Deployment
+
+- [Netlify](https://netlify.com)
+
+## API
+
+To handle search functionality application us public API
+[SWAPI](https://swapi.dev/)
 
 ## Available Scripts
 
@@ -38,33 +67,3 @@ If you aren’t satisfied with the build tool and configuration choices, you can
 Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
 
 You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `yarn build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)

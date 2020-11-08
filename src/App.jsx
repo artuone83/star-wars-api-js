@@ -75,8 +75,6 @@ const Link = styled.a`
 `;
 
 const initialState = {
-  people: [],
-  planets: [],
   filteredPeople: [],
   filteredPlanets: [],
   noResults: false,
@@ -163,7 +161,7 @@ const App = () => {
 
   const filteredContent = () => {
     if (state.filteredPeople.length > 0) {
-      return state.filteredPeople.map((person) => (
+      return state.filteredPeople?.map((person) => (
         <Person
           key={person.name}
           isActive={person.name === state.selectedPerson}
