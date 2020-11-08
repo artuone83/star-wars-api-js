@@ -116,16 +116,21 @@ const App = () => {
 
   const filteredContent = () => {
     if (state.filteredPeople.length > 0) {
-      return state.filteredPeople.map((person) => (
-        <Person
-          key={person.name}
-          isActive={person.name === selectedPerson}
-          onClick={handleResultClick(person.name)}
-        >
-          {' '}
-          {person.name}
-        </Person>
-      ));
+      return state.filteredPeople.map((person) => {
+        if (person) {
+          return (
+            <Person
+              key={person.name}
+              isActive={person.name === selectedPerson}
+              onClick={handleResultClick(person.name)}
+            >
+              {' '}
+              {person.name}
+            </Person>
+          );
+        }
+        return null;
+      });
     }
   };
 
