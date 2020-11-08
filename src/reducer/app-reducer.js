@@ -12,6 +12,8 @@ export const appReducer = (state, action) => {
       return { ...state, films: action.films };
     case types.SET_IS_PROCESSING:
       return { ...state, isProcessing: action.isProcessing };
+    case types.SET_NO_RESIDENTS:
+      return { ...state, noResidents: action.noResidents };
     default:
       return state;
   }
