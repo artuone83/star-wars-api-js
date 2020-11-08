@@ -80,12 +80,12 @@ const initialState = {
   noResults: false,
   films: [],
   isProcessing: false,
-  selectedPerson: '',
 };
 
 const App = () => {
   const [state, dispatch] = useReducer(appReducer, initialState);
   const [inputValue, setInputValue] = useState('');
+  const [selectedPerson, setSelectedPerson] = useState('');
 
   const handleSearch = () => async (e) => {
     e.preventDefault();
@@ -147,8 +147,8 @@ const App = () => {
   };
 
   const handleResultClick = (name) => async () => {
-    dispatch({ type: types.SET_SELECTED_PERSON, selectedPerson: name });
-    console.log('handleResultClick -> name', name);
+    setSelectedPerson(name);
+
     if (state.filteredPeople.length > 0) {
       const person = state.filteredPeople.find(
         (filteredPerson) => filteredPerson.name.toLowerCase() === name.toLowerCase(),
@@ -161,12 +161,13 @@ const App = () => {
 
   const filteredContent = () => {
     if (state.filteredPeople.length > 0) {
-      return state.filteredPeople?.map((person) => (
+      return state.filteredPeople.map((person) => (
         <Person
           key={person.name}
-          isActive={person.name === state.selectedPerson}
+          isActive={person.name === selectedPerson}
           onClick={handleResultClick(person.name)}
         >
+          {' '}
           {person.name}
         </Person>
       ));
