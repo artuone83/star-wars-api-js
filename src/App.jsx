@@ -81,7 +81,6 @@ const Link = styled.a`
 
 const initialState = {
   filteredPeople: [],
-  filteredPlanets: [],
   noResults: false,
   films: [],
   isProcessing: false,
@@ -107,13 +106,12 @@ const App = () => {
 
       dispatch({ type: types.SET_IS_PROCESSING, isProcessing: false });
       dispatch({ type: types.SET_FILTERED_PEOPLE, filteredPeople: person.results });
-      dispatch({ type: types.SET_FILTERED_PLANETS, filteredPlanets: planet.results });
 
       if (person.results.length === 0 && planet.results.length === 0) {
         dispatch({ type: types.SET_NO_RESULTS, noResults: true });
       } else if (person.results.length === 0 && planet.results.length > 0) {
         const planetResidents = [];
-
+        console.log('no people only planets');
         planet.results.forEach((result) => {
           if (result.residents.length > 0) {
             dispatch({ type: types.SET_NO_RESIDENTS, noResidents: false });
@@ -136,7 +134,7 @@ const App = () => {
           }
         });
       } else if (person.results.length > 0 && planet.results.length > 0) {
-        console.log('found people and planets', person.results, planet.results);
+        console.log('people and planets', person.results, planet.results);
       }
     } catch (error) {
       console.error(error);
@@ -149,10 +147,6 @@ const App = () => {
       dispatch({
         type: types.SET_FILTERED_PEOPLE,
         filteredPeople: initialState.filteredPeople,
-      });
-      dispatch({
-        type: types.SET_FILTERED_PLANETS,
-        filteredPlanets: initialState.filteredPlanets,
       });
       dispatch({ type: types.SET_NO_RESULTS, noResults: false });
       dispatch({ type: types.SET_FILMS, films: initialState.films });

@@ -28,7 +28,7 @@ To run application locally on developer's machine following steps must be perfor
 
 ## API
 
-To handle search functionality application us public API
+The application uses the public API to support the search function
 [SWAPI](https://swapi.dev/)
 
 ## Available Scripts
