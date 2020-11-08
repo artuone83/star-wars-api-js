@@ -3,11 +3,12 @@ import styled from 'styled-components';
 import SearchBar from './components/search-bar';
 import Films from './components/films';
 import { types } from './consts/types';
-import { URL } from './consts/urls';
-import { getFilmsData } from './utils/get-films-data';
+import { getFilmsData } from './actions/get-films-data';
+import { getPeopleAndPlanets } from './actions/get-people-and-planets';
 import { appReducer } from './reducer/app-reducer';
 import logo from './Star_Wars_Logo.svg';
 import Container from './layout/container';
+import Toast from './components/toast';
 
 const Header = styled.header`
   display: flex;
@@ -33,20 +34,6 @@ const Logo = styled.img`
 const Main = styled.main`
   padding: ${({ theme: { padding } }) => `${padding[1]}px`} 0;
 `;
-
-const Loading = styled.p`
-  text-align: center;
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: ${({ theme: { color_pallet: { olivetone } } }) => olivetone};
-  padding: 20px 50px;
-  color: ${({ theme: { color_pallet: { black } } }) => black};
-`;
-
-const NoMatch = styled(Loading)``;
-const NoResidents = styled(Loading)``;
 
 const Person = styled.p`
   display: inline-block;
@@ -97,48 +84,7 @@ const App = () => {
     dispatch({ type: types.SET_NO_RESULTS, noResults: false });
     dispatch({ type: types.SET_FILMS, films: initialState.films });
 
-    try {
-      dispatch({ type: types.SET_IS_PROCESSING, isProcessing: true });
-      const responsePerson = await fetch(`${URL.searchPeople}${inputValue}`);
-      const person = await responsePerson.json();
-      const responsePlanet = await fetch(`${URL.searchPlanet}${inputValue}`);
-      const planet = await responsePlanet.json();
-
-      dispatch({ type: types.SET_IS_PROCESSING, isProcessing: false });
-      dispatch({ type: types.SET_FILTERED_PEOPLE, filteredPeople: person.results });
-
-      if (person.results.length === 0 && planet.results.length === 0) {
-        dispatch({ type: types.SET_NO_RESULTS, noResults: true });
-      } else if (person.results.length === 0 && planet.results.length > 0) {
-        const planetResidents = [];
-        console.log('no people only planets');
-        planet.results.forEach((result) => {
-          if (result.residents.length > 0) {
-            dispatch({ type: types.SET_NO_RESIDENTS, noResidents: false });
-            result.residents.forEach(async (resident, index) => {
-              const residentHttps = resident.replace('http', 'https');
-              try {
-                dispatch({ type: types.SET_IS_PROCESSING, isProcessing: true });
-                const responseData = await fetch(residentHttps);
-                const residentData = await responseData.json();
-                dispatch({ type: types.SET_IS_PROCESSING, isProcessing: false });
-                planetResidents[index] = residentData;
-              } catch (error) {
-                console.error(error);
-              }
-
-              dispatch({ type: types.SET_FILTERED_PEOPLE, filteredPeople: planetResidents });
-            });
-          } else {
-            dispatch({ type: types.SET_NO_RESIDENTS, noResidents: true });
-          }
-        });
-      } else if (person.results.length > 0 && planet.results.length > 0) {
-        console.log('people and planets', person.results, planet.results);
-      }
-    } catch (error) {
-      console.error(error);
-    }
+    await getPeopleAndPlanets(inputValue, dispatch);
   };
 
   const handleInputChange = (e) => {
@@ -164,7 +110,7 @@ const App = () => {
       );
       const personFilms = person.films;
 
-      getFilmsData(personFilms, dispatch);
+      await getFilmsData(personFilms, dispatch);
     }
   };
 
@@ -198,9 +144,11 @@ const App = () => {
           <h1>Welcome to Star Wars WIKI</h1>
           <p>You can search WIKI by character or planet name</p>
         </HeadingWrapper>
-        {state.isProcessing && <Loading>Loading...</Loading>}
-        {state.noResults && <NoMatch>No match found</NoMatch>}
-        {state.noResidents && <NoResidents>No residents</NoResidents>}
+        <Toast
+          isProcessing={state.isProcessing}
+          noResults={state.noResults}
+          noResidents={state.noResidents}
+        />
         {filteredContent()}
         <Films films={state.films} />
       </Main>
