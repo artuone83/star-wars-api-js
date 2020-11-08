@@ -1,4 +1,3 @@
-/* eslint-disable import/prefer-default-export */
 export const theme = {
   color_pallet: {
     black: '#040404',

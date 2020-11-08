@@ -16,8 +16,6 @@ const GlobalStyle = createGlobalStyle`
   html {
     font-size: 16px;
     font-family: 'Big Shoulders Stencil Text', cursive;
-    /*font-family: 'Space Grotesk', sans-serif;*/
-    /*font-family: 'Teko', sans-serif;*/
   }
 
   body {

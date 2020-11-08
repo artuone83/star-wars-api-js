@@ -1,10 +1,7 @@
-/* eslint-disable import/prefer-default-export */
 import { types } from '../consts/types';
 
 export const appReducer = (state, action) => {
   switch (action.type) {
-    case types.SET_NAME:
-      return { ...state, inputValue: action.inputValue };
     case types.SET_FILTERED_PEOPLE:
       return { ...state, filteredPeople: action.filteredPeople };
     case types.SET_FILTERED_PLANETS:

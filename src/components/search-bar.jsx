@@ -1,5 +1,5 @@
-/* eslint-disable react/prop-types */
 import React from 'react';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
 const SearchBarForm = styled.form`
@@ -53,5 +53,11 @@ const SearchBar = ({ handleSearch, handleInputChange, inputValue }) => (
     <SubmitButton type="submit">Search</SubmitButton>
   </SearchBarForm>
 );
+
+SearchBar.propTypes = {
+  handleSearch: PropTypes.func.isRequired,
+  handleInputChange: PropTypes.func.isRequired,
+  inputValue: PropTypes.string.isRequired,
+};
 
 export default SearchBar;

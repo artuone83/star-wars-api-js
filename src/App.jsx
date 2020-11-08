@@ -1,10 +1,4 @@
-/* eslint-disable no-console */
-/* eslint-disable consistent-return */
-/* eslint-disable react/prop-types */
-/* eslint-disable jsx-a11y/click-events-have-key-events */
-/* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
-/* eslint-disable max-len */
-import React, { useReducer } from 'react';
+import React, { useReducer, useState } from 'react';
 import styled from 'styled-components';
 import SearchBar from './components/search-bar';
 import Films from './components/films';
@@ -23,9 +17,9 @@ const Header = styled.header`
   border-bottom: 1px solid ${({ theme: { color_pallet: { soratoga } } }) => soratoga}
 `;
 
-const H1 = styled.h1`
-  text-align: center;
+const HeadingWrapper = styled.div`
   margin-bottom: 50px;
+  text-align: center;
 `;
 
 const Logo = styled.img`
@@ -85,7 +79,6 @@ const initialState = {
   planets: [],
   filteredPeople: [],
   filteredPlanets: [],
-  inputValue: '',
   noResults: false,
   films: [],
   isProcessing: false,
@@ -94,6 +87,7 @@ const initialState = {
 
 const App = () => {
   const [state, dispatch] = useReducer(appReducer, initialState);
+  const [inputValue, setInputValue] = useState('');
 
   const handleSearch = () => async (e) => {
     e.preventDefault();
@@ -102,9 +96,9 @@ const App = () => {
 
     try {
       dispatch({ type: types.SET_IS_PROCESSING, isProcessing: true });
-      const responsePerson = await fetch(`${URL.searchPeople}${state.inputValue}`);
+      const responsePerson = await fetch(`${URL.searchPeople}${inputValue}`);
       const person = await responsePerson.json();
-      const responsePlanet = await fetch(`${URL.searchPlanet}${state.inputValue}`);
+      const responsePlanet = await fetch(`${URL.searchPlanet}${inputValue}`);
       const planet = await responsePlanet.json();
 
       dispatch({ type: types.SET_IS_PROCESSING, isProcessing: false });
@@ -151,7 +145,7 @@ const App = () => {
       dispatch({ type: types.SET_NO_RESULTS, noResults: false });
       dispatch({ type: types.SET_FILMS, films: initialState.films });
     }
-    dispatch({ type: types.SET_NAME, inputValue: value.trim() });
+    setInputValue(value.trim());
   };
 
   const handleResultClick = (name) => async () => {
@@ -170,7 +164,11 @@ const App = () => {
   const filteredContent = () => {
     if (state.filteredPeople.length > 0) {
       return state.filteredPeople.map((person) => (
-        <Person key={person.name} isActive={person.name === state.selectedPerson} onClick={handleResultClick(person.name)}>
+        <Person
+          key={person.name}
+          isActive={person.name === state.selectedPerson}
+          onClick={handleResultClick(person.name)}
+        >
           {person.name}
         </Person>
       ));
@@ -187,7 +185,10 @@ const App = () => {
         />
       </Header>
       <Main>
-        <H1>Welcome to Star Wars WIKI</H1>
+        <HeadingWrapper>
+          <h1>Welcome to Star Wars WIKI</h1>
+          <p>You can search WIKI by character or planet name</p>
+        </HeadingWrapper>
         {state.isProcessing && <Loading>Loading...</Loading>}
         {state.noResults && <NoMatch>No match found</NoMatch>}
         {filteredContent()}

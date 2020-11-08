@@ -1,5 +1,3 @@
-/* eslint-disable no-console */
-/* eslint-disable import/prefer-default-export */
 import { types } from '../consts/types';
 
 export const getFilmsData = async (films, dispatch) => {
