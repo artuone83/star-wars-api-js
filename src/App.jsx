@@ -4,7 +4,7 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 /* eslint-disable max-len */
-import React, { useEffect, useReducer } from 'react';
+import React, { useReducer } from 'react';
 import styled from 'styled-components';
 import SearchBar from './components/search-bar';
 import Films from './components/films';
@@ -24,7 +24,8 @@ const Header = styled.header`
 `;
 
 const H1 = styled.h1`
-  margin-left: 15px;
+  text-align: center;
+  margin-bottom: 50px;
 `;
 
 const Logo = styled.img`
@@ -35,23 +36,29 @@ const Main = styled.main`
   padding: ${({ theme: { padding } }) => `${padding[1]}px`} 0;
 `;
 
+const Loading = styled.p`
+  text-align: center;
+`;
+
+const NoMatch = styled(Loading)``;
+
 const Person = styled.p`
   display: inline-block;
   margin-top: 25px;
   transition: 0.5s;
-  padding: 15px 50px 15px 0;
+  padding: 15px 50px;
   border-radius: 4px;
   font-size: 2rem;
   font-weight: bold;
   text-transform: uppercase;
+  background: ${(props) => (props.isActive ? props.theme.color_pallet.ripeLemon : '')};
+  color: ${(props) => (props.isActive ? props.theme.color_pallet.black : '')};
   &:hover {
     cursor: pointer;
     background: ${({ theme: { color_pallet: { ripeLemon } } }) => ripeLemon};
     color: ${({ theme: { color_pallet: { black } } }) => black};
-    padding-left: 50px;
   }
 `;
-const Planet = styled(Person)``;
 
 const Footer = styled.footer`
   border-top: 1px solid ${({ theme: { color_pallet: { soratoga } } }) => soratoga};
@@ -74,47 +81,53 @@ const initialState = {
   inputValue: '',
   noResults: false,
   films: [],
+  isProcessing: false,
+  selectedPerson: '',
 };
 
 const App = () => {
   const [state, dispatch] = useReducer(appReducer, initialState);
 
-  useEffect(() => {
-    const getData = async () => {
-      try {
-        const peopleResponse = await fetch(URL.people);
-        const peopleData = await peopleResponse.json();
-        const planetsResponse = await fetch(URL.planets);
-        const planetsData = await planetsResponse.json();
-
-        dispatch({ type: types.SET_PEOPLE, people: peopleData.results });
-        dispatch({ type: types.SET_PLANETS, planets: planetsData.results });
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    getData();
-  }, []);
-
-  const handleSearch = () => (e) => {
+  const handleSearch = () => async (e) => {
     e.preventDefault();
     dispatch({ type: types.SET_NO_RESULTS, noResults: false });
     dispatch({ type: types.SET_FILMS, films: initialState.films });
 
-    const filteredPeople = state.people.filter(
-      (person) => person.name.toLowerCase() === state.inputValue.toLowerCase(),
-    );
-    const filteredPlanets = state.planets.filter(
-      (planet) => planet.name.toLowerCase() === state.inputValue.toLowerCase()
-        || planet.population === state.inputValue,
-    );
+    try {
+      dispatch({ type: types.SET_IS_PROCESSING, isProcessing: true });
+      const responsePerson = await fetch(`${URL.searchPeople}${state.inputValue}`);
+      const person = await responsePerson.json();
+      const responsePlanet = await fetch(`${URL.searchPlanet}${state.inputValue}`);
+      const planet = await responsePlanet.json();
 
-    if (filteredPeople.length === 0 && filteredPlanets.length === 0) {
-      dispatch({ type: types.SET_NO_RESULTS, noResults: true });
+      dispatch({ type: types.SET_IS_PROCESSING, isProcessing: false });
+      dispatch({ type: types.SET_FILTERED_PEOPLE, filteredPeople: person.results });
+      dispatch({ type: types.SET_FILTERED_PLANETS, filteredPlanets: planet.results });
+
+      if (person.results.length === 0 && planet.results.length === 0) {
+        dispatch({ type: types.SET_NO_RESULTS, noResults: true });
+      } else if (person.results.length === 0 && planet.results.length > 0) {
+        const planetResidents = [];
+
+        planet.results.forEach((result) => {
+          result.residents.forEach(async (resident, index) => {
+            const residentHttps = resident.replace('http', 'https');
+            try {
+              dispatch({ type: types.SET_IS_PROCESSING, isProcessing: true });
+              const responseData = await fetch(residentHttps);
+              const residentData = await responseData.json();
+              dispatch({ type: types.SET_IS_PROCESSING, isProcessing: false });
+              planetResidents[index] = residentData;
+            } catch (error) {
+              console.error(error);
+            }
+            dispatch({ type: types.SET_FILTERED_PEOPLE, filteredPeople: planetResidents });
+          });
+        });
+      }
+    } catch (error) {
+      console.error(error);
     }
-    dispatch({ type: types.SET_FILTERED_PEOPLE, filteredPeople });
-    dispatch({ type: types.SET_FILTERED_PLANETS, filteredPlanets });
   };
 
   const handleInputChange = (e) => {
@@ -135,6 +148,8 @@ const App = () => {
   };
 
   const handleResultClick = (name) => async () => {
+    dispatch({ type: types.SET_SELECTED_PERSON, selectedPerson: name });
+    console.log('handleResultClick -> name', name);
     if (state.filteredPeople.length > 0) {
       const person = state.filteredPeople.find(
         (filteredPerson) => filteredPerson.name.toLowerCase() === name.toLowerCase(),
@@ -143,31 +158,14 @@ const App = () => {
 
       getFilmsData(personFilms, dispatch);
     }
-
-    if (state.filteredPlanets.length > 0) {
-      const planet = state.filteredPlanets.find(
-        (filteredPlanet) => filteredPlanet.name.toLowerCase() === name.toLowerCase(),
-      );
-      const planetFilms = planet.films;
-
-      getFilmsData(planetFilms, dispatch);
-    }
   };
 
   const filteredContent = () => {
     if (state.filteredPeople.length > 0) {
       return state.filteredPeople.map((person) => (
-        <Person key={person.name} onClick={handleResultClick(person.name)}>
+        <Person key={person.name} isActive={person.name === state.selectedPerson} onClick={handleResultClick(person.name)}>
           {person.name}
         </Person>
-      ));
-    }
-
-    if (state.filteredPlanets.length > 0) {
-      return state.filteredPlanets.map((planet) => (
-        <Planet key={planet.name} onClick={handleResultClick(planet.name)}>
-          {planet.name}
-        </Planet>
       ));
     }
   };
@@ -176,14 +174,15 @@ const App = () => {
     <Container>
       <Header>
         <Logo src={logo} alt="logo" />
-        <H1>Welcome to Star Wars WIKI</H1>
-      </Header>
-      <Main>
         <SearchBar
           handleSearch={handleSearch()}
           handleInputChange={handleInputChange}
         />
-        {state.noResults && <p>no match found</p>}
+      </Header>
+      <Main>
+        <H1>Welcome to Star Wars WIKI</H1>
+        {state.isProcessing && <Loading>Loading...</Loading>}
+        {state.noResults && <NoMatch>No match found</NoMatch>}
         {filteredContent()}
         <Films films={state.films} />
       </Main>

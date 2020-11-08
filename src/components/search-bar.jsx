@@ -2,16 +2,19 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const SearchBarForm = styled.form``;
+const SearchBarForm = styled.form`
+  width: 50%;
+  display: flex;
+`;
 
 const SearchInput = styled.input`
+  flex-grow: 1;
   padding: 10px 20px;
   background: transparent;
   border-top: none;
   border-right: none;
   border-bottom: 2px solid white;
   border-left: none;
-  min-width: 50%;
   color: white;
   font-size: 1rem;
   font-weight: bold;
