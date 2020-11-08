@@ -38,6 +38,13 @@ const Main = styled.main`
 
 const Loading = styled.p`
   text-align: center;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: ${({ theme: { color_pallet: { olivetone } } }) => olivetone};
+  padding: 20px 50px;
+  color: ${({ theme: { color_pallet: { black } } }) => black};
 `;
 
 const NoMatch = styled(Loading)``;

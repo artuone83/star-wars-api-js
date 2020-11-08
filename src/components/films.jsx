@@ -4,6 +4,7 @@ import styled from 'styled-components';
 
 const FilmsList = styled.ul`
   padding: 20px 40px;
+  margin-top: 30px;
 `;
 
 const ListItem = styled.li`
