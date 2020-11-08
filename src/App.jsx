@@ -14,7 +14,11 @@ const Header = styled.header`
   justify-content: space-between;
   align-items: center;
   padding: ${({ theme: { padding } }) => `${padding[1]}px`} 0;
-  border-bottom: 1px solid ${({ theme: { color_pallet: { soratoga } } }) => soratoga}
+  border-bottom: 1px solid ${({ theme: { color_pallet: { soratoga } } }) => soratoga};
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
 `;
 
 const HeadingWrapper = styled.div`
@@ -181,6 +185,7 @@ const App = () => {
         <SearchBar
           handleSearch={handleSearch()}
           handleInputChange={handleInputChange}
+          inputValue={inputValue}
         />
       </Header>
       <Main>
