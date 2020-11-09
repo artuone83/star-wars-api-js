@@ -2,8 +2,6 @@ import { uniqBy } from 'lodash';
 import { types } from '../consts/types';
 import { URL } from '../consts/urls';
 
-// non_duplidated_data = _.uniq(data, 'name');
-
 export const getPeopleAndPlanets = async (inputValue, dispatch) => {
   try {
     dispatch({ type: types.SET_IS_PROCESSING, isProcessing: true });
