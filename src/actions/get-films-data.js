@@ -14,6 +14,13 @@ export const getFilmsData = async (films, dispatch) => {
       dispatch({ type: types.SET_FILMS, films: response });
     } catch (error) {
       console.error(error);
+      dispatch({
+        type: types.SET_REQUEST_ERROR,
+        requestError: {
+          status: true,
+          message: 'Cannot get films',
+        },
+      });
     }
   });
 };

@@ -12,6 +12,8 @@ export const appReducer = (state, action) => {
       return { ...state, isProcessing: action.isProcessing };
     case types.SET_NO_RESIDENTS:
       return { ...state, noResidents: action.noResidents };
+    case types.SET_REQUEST_ERROR:
+      return { ...state, requestError: action.requestError };
     default:
       return state;
   }

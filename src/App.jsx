@@ -72,6 +72,7 @@ const initialState = {
   films: [],
   isProcessing: false,
   noResidents: false,
+  requestError: false,
 };
 
 const App = () => {
@@ -153,6 +154,7 @@ const App = () => {
           isProcessing={state.isProcessing}
           noResults={state.noResults}
           noResidents={state.noResidents}
+          requestError={state.requestError}
         />
         {filteredContent()}
         <Films films={state.films} />
