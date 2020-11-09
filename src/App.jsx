@@ -72,7 +72,10 @@ const initialState = {
   films: [],
   isProcessing: false,
   noResidents: false,
-  requestError: false,
+  requestError: {
+    status: false,
+    message: '',
+  },
 };
 
 const App = () => {
