@@ -1,5 +1,8 @@
+import { uniqBy } from 'lodash';
 import { types } from '../consts/types';
 import { URL } from '../consts/urls';
+
+// non_duplidated_data = _.uniq(data, 'name');
 
 export const getPeopleAndPlanets = async (inputValue, dispatch) => {
   try {
@@ -94,7 +97,7 @@ export const getPeopleAndPlanets = async (inputValue, dispatch) => {
 
             dispatch({
               type: types.SET_FILTERED_PEOPLE,
-              filteredPeople: [...person.results, ...planetResidents],
+              filteredPeople: uniqBy([...person.results, ...planetResidents], 'name'),
             });
           });
         }
