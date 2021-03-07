@@ -3,8 +3,8 @@ import styled from 'styled-components';
 import SearchBar from './components/search-bar';
 import Films from './components/films';
 import { types } from './consts/types';
-import { getFilmsData } from './actions/get-films-data';
-import { getPeopleAndPlanets } from './actions/get-people-and-planets';
+import { getFilmsData } from './actions/films/get-films-data';
+import { getSearchData } from './actions/people-and-planets/get-search-data';
 import { appReducer } from './reducer/app-reducer';
 import logo from './Star_Wars_Logo.svg';
 import Container from './layout/container';
@@ -86,9 +86,8 @@ const App = () => {
   const handleSearch = () => async (e) => {
     e.preventDefault();
     dispatch({ type: types.SET_NO_RESULTS, noResults: false });
-    dispatch({ type: types.SET_FILMS, films: initialState.films });
 
-    await getPeopleAndPlanets(inputValue, dispatch);
+    await getSearchData(inputValue, dispatch);
   };
 
   const handleInputChange = (e) => {
@@ -102,7 +101,7 @@ const App = () => {
       dispatch({ type: types.SET_FILMS, films: initialState.films });
       dispatch({ type: types.SET_NO_RESIDENTS, noResidents: false });
     }
-    setInputValue(value.trim());
+    setInputValue(value);
   };
 
   const handleResultClick = (name) => async () => {
@@ -128,7 +127,6 @@ const App = () => {
               isActive={person.name === selectedPerson}
               onClick={handleResultClick(person.name)}
             >
-              {' '}
               {person.name}
             </Person>
           );
@@ -166,7 +164,6 @@ const App = () => {
         <p>{new Date().getFullYear()}</p>
         <p>
           Powered by
-          {' '}
           <Link href="https://swapi.dev/">SWAPI</Link>
         </p>
       </Footer>
