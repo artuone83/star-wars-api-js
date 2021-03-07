@@ -165,6 +165,7 @@ const App = () => {
         <p>{new Date().getFullYear()}</p>
         <p>
           Powered by
+          {' '}
           <Link href="https://swapi.dev/">SWAPI</Link>
         </p>
       </Footer>
