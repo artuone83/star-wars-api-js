@@ -1,17 +1,18 @@
+import { uniqBy } from 'lodash';
 import { types } from '../../consts/types';
 
-export const setPeopleFromPlanetResidents = (planetData, dispatch) => {
+export const setResultsFromPeopleAndPlanets = (person, planet, dispatch) => {
   const planetResidents = [];
-  const { results } = planetData;
+  const { results: personResults } = person;
+  const { results: planetResults } = planet;
 
-  results.forEach((result) => {
+  planetResults.forEach((result) => {
     const { residents } = result;
 
     if (residents.length > 0) {
-      dispatch({ type: types.SET_NO_RESIDENTS, noResidents: false });
-
       residents.forEach(async (resident, index) => {
         const residentHttps = resident.replace('http', 'https');
+
         try {
           dispatch({ type: types.SET_IS_PROCESSING, isProcessing: true });
           dispatch({
@@ -25,7 +26,6 @@ export const setPeopleFromPlanetResidents = (planetData, dispatch) => {
           const residentData = await responseData.json();
 
           dispatch({ type: types.SET_IS_PROCESSING, isProcessing: false });
-
           planetResidents[index] = residentData;
         } catch (error) {
           console.error(error);
@@ -38,10 +38,11 @@ export const setPeopleFromPlanetResidents = (planetData, dispatch) => {
           });
         }
 
-        dispatch({ type: types.SET_FILTERED_PEOPLE, filteredPeople: planetResidents });
+        dispatch({
+          type: types.SET_FILTERED_PEOPLE,
+          filteredPeople: uniqBy([...personResults, ...planetResidents], 'name'),
+        });
       });
-    } else {
-      dispatch({ type: types.SET_NO_RESIDENTS, noResidents: true });
     }
   });
 };

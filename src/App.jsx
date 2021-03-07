@@ -100,6 +100,7 @@ const App = () => {
       dispatch({ type: types.SET_NO_RESULTS, noResults: false });
       dispatch({ type: types.SET_FILMS, films: initialState.films });
       dispatch({ type: types.SET_NO_RESIDENTS, noResidents: false });
+      setSelectedPerson('');
     }
     setInputValue(value);
   };

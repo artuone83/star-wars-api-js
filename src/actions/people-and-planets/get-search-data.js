@@ -1,7 +1,8 @@
-import { uniqBy } from 'lodash';
 import { types } from '../../consts/types';
 import { URL } from '../../consts/urls';
+import { setNoResults } from './set-no-results';
 import { setPeopleFromPlanetResidents } from './set-people-from-planet-residents';
+import { setResultsFromPeopleAndPlanets } from './set-results-from-people-and-planets';
 
 export const getSearchData = async (inputValue, dispatch) => {
   try {
@@ -12,6 +13,7 @@ export const getSearchData = async (inputValue, dispatch) => {
         status: false,
       },
     });
+
     const responsePerson = await fetch(`${URL.searchPeople}${inputValue}`);
     const person = await responsePerson.json();
 
@@ -21,54 +23,14 @@ export const getSearchData = async (inputValue, dispatch) => {
     dispatch({ type: types.SET_IS_PROCESSING, isProcessing: false });
     dispatch({ type: types.SET_FILTERED_PEOPLE, filteredPeople: person.results });
 
-    const noResults = () => {
-      dispatch({ type: types.SET_NO_RESULTS, noResults: true });
-    };
-
     if (person.results.length === 0 && planet.results.length === 0) {
-      noResults();
+      setNoResults(dispatch);
     }
     if (person.results.length === 0 && planet.results.length > 0) {
       setPeopleFromPlanetResidents(planet, dispatch);
     }
     if (person.results.length > 0 && planet.results.length > 0) {
-      const planetResidents = [];
-
-      planet.results.forEach((result) => {
-        if (result.residents.length > 0) {
-          result.residents.forEach(async (resident, index) => {
-            const residentHttps = resident.replace('http', 'https');
-            try {
-              dispatch({ type: types.SET_IS_PROCESSING, isProcessing: true });
-              dispatch({
-                type: types.SET_REQUEST_ERROR,
-                requestError: {
-                  status: false,
-                },
-              });
-
-              const responseData = await fetch(residentHttps);
-              const residentData = await responseData.json();
-              dispatch({ type: types.SET_IS_PROCESSING, isProcessing: false });
-              planetResidents[index] = residentData;
-            } catch (error) {
-              console.error(error);
-              dispatch({
-                type: types.SET_REQUEST_ERROR,
-                requestError: {
-                  status: true,
-                  message: 'Cannot get residents',
-                },
-              });
-            }
-
-            dispatch({
-              type: types.SET_FILTERED_PEOPLE,
-              filteredPeople: uniqBy([...person.results, ...planetResidents], 'name'),
-            });
-          });
-        }
-      });
+      setResultsFromPeopleAndPlanets(person, planet, dispatch);
     }
   } catch (error) {
     console.error(error);
