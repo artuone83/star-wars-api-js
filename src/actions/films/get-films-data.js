@@ -3,7 +3,7 @@ import { types } from '../../consts/types';
 export const getFilmsData = async (personFilms, dispatch) => {
   const films = [];
 
-  personFilms?.forEach(async (personFilm, index) => {
+  personFilms.forEach(async (personFilm, index) => {
     const personFilmHTTPS = personFilm.replace('http', 'https');
     try {
       dispatch({ type: types.SET_IS_PROCESSING, isProcessing: true });
