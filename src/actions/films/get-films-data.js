@@ -1,17 +1,21 @@
-import { types } from '../consts/types';
+import { types } from '../../consts/types';
 
-export const getFilmsData = async (films, dispatch) => {
-  const response = [];
+export const getFilmsData = async (personFilms, dispatch) => {
+  const films = [];
 
-  films?.forEach(async (personFilm, index) => {
+  personFilms?.forEach(async (personFilm, index) => {
     const personFilmHTTPS = personFilm.replace('http', 'https');
     try {
       dispatch({ type: types.SET_IS_PROCESSING, isProcessing: true });
+
       const responseData = await fetch(personFilmHTTPS);
       const personFilmData = await responseData.json();
+
       dispatch({ type: types.SET_IS_PROCESSING, isProcessing: false });
-      response[index] = personFilmData;
-      dispatch({ type: types.SET_FILMS, films: response });
+
+      films[index] = personFilmData;
+
+      dispatch({ type: types.SET_FILMS, films });
     } catch (error) {
       console.error(error);
       dispatch({

@@ -37,12 +37,13 @@ const SubmitButton = styled.button`
   color: ${({ theme: { color_pallet: { ripeLemon } } }) => ripeLemon};
   border-radius: 4px;
   border: 1px solid ${({ theme: { color_pallet: { ripeLemon } } }) => ripeLemon};
-  cursor: pointer;
+  
+  cursor: not-allowed;
   transition: 0.5s;
   font-family: 'Big Shoulders Stencil Text', cursive;
 
   ${({ isActive }) => isActive && css`
-    cursor: not-allowed;
+    cursor: pointer;  
   `}
 
   &:hover {
@@ -55,21 +56,25 @@ const SubmitButton = styled.button`
   }
 `;
 
-const SearchBar = ({ handleSearch, handleInputChange, inputValue }) => (
-  <SearchBarForm onSubmit={inputValue ? handleSearch : (e) => {
-    e.preventDefault();
-    return false;
-  }}
-  >
-    <SearchInput
-      type="text"
-      placeholder="Name, Planet"
-      value={inputValue}
-      onChange={handleInputChange}
-    />
-    <SubmitButton isActive={!inputValue} type="submit">Search</SubmitButton>
-  </SearchBarForm>
-);
+const SearchBar = ({ handleSearch, handleInputChange, inputValue }) => {
+  const isValidInputValue = inputValue.trim().length > 0;
+
+  return (
+    <SearchBarForm onSubmit={isValidInputValue ? handleSearch : (e) => {
+      e.preventDefault();
+      return false;
+    }}
+    >
+      <SearchInput
+        type="text"
+        placeholder="Name, Planet"
+        value={inputValue}
+        onChange={handleInputChange}
+      />
+      <SubmitButton isActive={isValidInputValue} type="submit">Search</SubmitButton>
+    </SearchBarForm>
+  );
+};
 
 SearchBar.propTypes = {
   handleSearch: PropTypes.func.isRequired,
