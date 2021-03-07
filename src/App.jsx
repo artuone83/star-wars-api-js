@@ -6,7 +6,7 @@ import { types } from './consts/types';
 import { getFilmsData } from './actions/films/get-films-data';
 import { getSearchData } from './actions/people-and-planets/get-search-data';
 import { appReducer } from './reducer/app-reducer';
-import logo from './Star_Wars_Logo.svg';
+import logo from './assets/icons/Star_Wars_Logo.svg';
 import Container from './layout/container';
 import Toast from './components/toast';
 
